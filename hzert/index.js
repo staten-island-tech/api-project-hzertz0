@@ -6,9 +6,33 @@ async function getData(){
         }
         else {
             const api = await response.json();
+
             for (const champion in api.data) {
-                console.log(`${champion}:`, api.data[champion]);
-                }
+                const champId = api.data[champion].id.toLowerCase();
+
+                document.querySelector(".champions").insertAdjacentHTML(
+                    "afterbegin",
+                    `<div class="card">
+                        <h2>${api.data[champion].name}</h2>
+                        <p>${api.data[champion].blurb}</p>
+                        <img src="https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_q.png"
+                            onerror="this.onerror=null; 
+                                this.src='https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_q1.png';"/>
+
+                        <img src="https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_w.png"
+                            onerror="this.onerror=null; 
+                                this.src='https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_w1.png';"/>
+
+                        <img src="https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_e.png"
+                            onerror="this.onerror=null; 
+                                this.src='https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_e1.png';"/>
+
+                        <img src="https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_r.png"
+                            onerror="this.onerror=null; 
+                                this.src='https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_r1.png';"/>
+                    </div>`
+                );
+            }
         }
     }
     catch (error) {
@@ -16,3 +40,5 @@ async function getData(){
     }
 }
 getData()
+
+/*https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_q1.png*/
