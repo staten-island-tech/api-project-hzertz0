@@ -1,44 +1,75 @@
-async function getData(){
-    try {
-        const response = await fetch("https://ddragon.leagueoflegends.com/cdn/15.9.1/data/en_US/champion.json");
-        if (response.status != 200){
-            throw new Error(response);
-        }
-        else {
-            const api = await response.json();
+/*async function getData() {
+  try {
+    const response = await fetch(
+      "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"
+    );
+    const deckData = await response.json();
+    const deckId = deckData.deck_id;
 
-            for (const champion in api.data) {
-                const champId = api.data[champion].id.toLowerCase();
+    const drawResponse = await fetch(
+      `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=52`
+    );
+    const drawData = await drawResponse.json();
 
-                document.querySelector(".champions").insertAdjacentHTML(
-                    "afterbegin",
-                    `<div class="card">
-                        <h2>${api.data[champion].name}</h2>
-                        <p>${api.data[champion].blurb}</p>
-                        <img src="https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_q.png"
-                            onerror="this.onerror=null; 
-                                this.src='https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_q1.png';"/>
-
-                        <img src="https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_w.png"
-                            onerror="this.onerror=null; 
-                                this.src='https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_w1.png';"/>
-
-                        <img src="https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_e.png"
-                            onerror="this.onerror=null; 
-                                this.src='https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_e1.png';"/>
-
-                        <img src="https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_r.png"
-                            onerror="this.onerror=null; 
-                                this.src='https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_r1.png';"/>
-                    </div>`
-                );
-            }
-        }
-    }
-    catch (error) {
-        console.log(error);
-    }
+    drawData.cards.forEach((card, index) => {
+        document.querySelector(".container").insertAdjacentHTML(    
+            "afterbegin",
+            `<div class="card"">
+            <img src="${card.image}" />
+            <h2>${card.value} of ${card.suit}</h2>
+            </div>`
+  );
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
-getData()
 
-/*https://raw.communitydragon.org/latest/game/assets/characters/${champId}/hud/icons2d/${champId}_q1.png*/
+getData();*/
+
+let cards = [];       // holds the deck
+let currentIndex = 0; // tracks current card
+
+async function getData() {
+  try {
+    const response = await fetch(
+      "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"
+    );
+    const deckData = await response.json();
+    const deckId = deckData.deck_id;
+
+    const drawResponse = await fetch(
+      `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=52`
+    );
+    const drawData = await drawResponse.json();
+
+    cards = drawData.cards; // save cards
+    showCard();             // show first card
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function showCard() {
+  if (currentIndex >= cards.length) {
+    alert("No more cards!");
+    return;
+  }
+
+  const card = cards[currentIndex];
+  const container = document.querySelector(".container");
+
+  container.innerHTML = `
+    <div class="card">
+      <img src="${card.image}" />
+      <h2>${card.value} of ${card.suit}</h2>
+    </div>
+  `;
+}
+
+document.getElementById("nextCard").addEventListener("click", () => {
+  currentIndex++;
+  showCard();
+});
+
+getData();
