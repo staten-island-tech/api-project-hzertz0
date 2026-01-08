@@ -9,11 +9,23 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
-  <title>Document</title>
+  <title>Slapjack</title>
 </head>
 <body>
-    <button id="nextCard">Next Card</button>
-  <div class="container m-6.25 flex flex-wrap justify-center"></div>
+    <h1 class="w-auto h-15 bg-white text-[30px] font-bold text-center mt-5">Slapjack</h1>
+    <div class="flex flex-col items-center gap-4">
+    <div class="flex items-center gap-6 mt-10">
+      <img id="cardBack" src="https://deckofcardsapi.com/static/img/back.png"/>
+
+      <div class="container"></div>
+    </div>
+
+    <div class="mt-8 flex gap-4">
+      <button class="btn btn-active" id="nextCard">Next Card</button>
+      <button class="btn btn-error" id="slap">Slap</button>
+    </div>
+  </div>
+
   <script type="module" src="index.js"></script>
 </body>
 </html>

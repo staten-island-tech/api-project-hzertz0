@@ -31,10 +31,7 @@ function showCard() {
   const container = document.querySelector(".container");
 
   container.innerHTML = `
-    <div class="w-100 min-h-75 text-[20px] m-3.75 rounded-2.5 p-2.5 pb-15 text-center border border-black text-black">
-      <img src="${card.image}" />
-      <h2>${card.value} of ${card.suit}</h2>
-    </div>
+      <img src="${card.image}" class="mx-auto" />
   `;
 }
 
