@@ -1,5 +1,21 @@
 let cards = [];       // holds the deck
 let currentIndex = 0; // tracks current card
+let slapCard = 1;     
+let slapRequired = false;
+const cardValues = {
+  "ACE": 1,
+  "JACK": 11,
+  "QUEEN": 12,
+  "KING": 13
+};
+
+function getCardValue(card) {
+
+  if (cardValues[card.value]) {
+    return cardValues[card.value]; 
+  }
+  return Number(card.value); 
+}
 
 async function getData() {
   try {
@@ -14,7 +30,7 @@ async function getData() {
     );
     const drawData = await drawResponse.json();
 
-    cards = drawData.cards; // save all cards in the deckid
+    cards = drawData.cards; // save all cards in the deck
     showCard();             // show first card
   } catch (error) {
     console.error(error);
@@ -23,16 +39,17 @@ async function getData() {
 
 function showCard() {
   if (currentIndex >= cards.length) {
-    console.log("Out of cards")
+    console.log("You win!")
     return;
   }
-
-  const card = cards[currentIndex]; // save and display current card
+  const card = cards[currentIndex];
   const container = document.querySelector(".container");
 
   container.innerHTML = `
-      <img src="${card.image}" class="mx-auto" />
+    <img src="${card.image}" class="mx-auto" />
   `;
+  countCard();
+  slapCard++;  
 }
 
 document.getElementById("nextCard").addEventListener("click", () => {
@@ -41,3 +58,24 @@ document.getElementById("nextCard").addEventListener("click", () => {
 });
 
 getData();
+
+function countCard() {
+  
+  if (!cards[currentIndex]) return;
+
+  const cardValue = getCardValue(cards[currentIndex]); 
+  
+  if (slapCard === cardValue || cards[currentIndex].value === "JACK") {
+    slapRequired = true;
+    console.log("Slap")}
+
+  if (slapCard === 13) {
+    slapCard = 1;}
+}
+
+document.getElementById("slapCard").addEventListener("click", () => {
+  if (slapRequired === true){
+    console.log("test");
+    slapRequired = false;
+  }
+});
