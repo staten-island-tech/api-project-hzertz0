@@ -43,9 +43,8 @@ function showCard() {
     return;
   }
   const card = cards[currentIndex];
-  const container = document.querySelector(".container");
 
-  container.innerHTML = `
+  document.querySelector(".container").innerHTML = `
     <img src="${card.image}" class="mx-auto" />
   `;
   countCard();
@@ -53,14 +52,17 @@ function showCard() {
 }
 
 document.getElementById("nextCard").addEventListener("click", () => {
-  currentIndex++;
-  showCard();
+  if (slapRequired === false){
+    currentIndex++;
+    showCard();}
 });
 
 getData();
 
 function countCard() {
-  
+  document.querySelector(".slapCount").innerHTML = `
+    <p>Current Count: ${slapCard}</p>
+    `
   if (!cards[currentIndex]) return;
 
   const cardValue = getCardValue(cards[currentIndex]); 
