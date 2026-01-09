@@ -2,14 +2,14 @@ let cards = [];       // holds the deck
 let currentIndex = 0; // tracks current card
 let slapCard = 1;     
 let slapRequired = false;
-const cardValues = {
+const cardValues = { // convert strings to corresponding integer
   "ACE": 1,
   "JACK": 11,
   "QUEEN": 12,
   "KING": 13
 };
 
-function getCardValue(card) {
+function getCardValue(card) { // if card value is in cardvalues, turn it into cardvalues integer
 
   if (cardValues[card.value]) {
     return cardValues[card.value]; 
@@ -89,3 +89,15 @@ document.getElementById("slapCard").addEventListener("click", () => {
     console.log("fail");
   }
 });
+
+/*PLAN:
+win: get all 52 cards
+penalty: if you slap or try to flip while its a matched card, then the currently drawn cards get thrown back into the shuffle pile
+slap: if you slap in time, then you hold onto the cards currently drawn
+features:
+add a "cards left" tracker
+add a "cards taken" tracker
+add a clear way to see that the penatly is applied
+add a timer for slapping (1 second)
+add a rules button in the top right
+*/
