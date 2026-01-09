@@ -55,6 +55,10 @@ document.getElementById("nextCard").addEventListener("click", () => {
   if (slapRequired === false){
     currentIndex++;
     showCard();}
+  
+  if (slapRequired === true){
+    console.log("fail")
+  }
 });
 
 getData();
@@ -72,12 +76,16 @@ function countCard() {
     console.log("Slap")}
 
   if (slapCard === 13) {
-    slapCard = 1;}
+    slapCard = 0;}
 }
 
 document.getElementById("slapCard").addEventListener("click", () => {
   if (slapRequired === true){
     console.log("test");
     slapRequired = false;
+  }
+
+  if (slapRequired === false){
+    console.log("fail");
   }
 });
