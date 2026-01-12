@@ -17,16 +17,15 @@
         <h1 class="text-5xl">Slapjack</h1>
         <h2 class="text-2xl">but dumb</h2>
       </div>
-    <div class="ml-auto dropdown">
-      <div tabindex="0" role="button" class="btn m-1">Click</div>
-      <div
-        tabindex="0"
-        class="dropdown-content card card-sm bg-base-100 z-1 w-64 shadow-md">
-        <div class="card-body">
-          <p>This is a card. You can use any element as a dropdown.</p>
-        </div>
-      </div>
-    </div>
+      <div class="ml-auto dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn m-1">Rules</div>
+        <div tabindex="0" class="dropdown-content card card-sm bg-base-100 z-10 w-64 shadow-md">
+          <div class="card-body">
+            <p>The Rules:</p>
+            <p>As you draw a card, a counter will go up by each card value, if the card drawn is equal to the value, or a Jack, then you must slap within 1 second.</p>
+            <p>If you fail to slap in time or attempt to draw a card, then the currently drawn cards are put back into the deck.</p>
+            <p>If you slap in time, then you get to hold onto the current pile drawn, the goal is to hold onto all 52 cards!</p>
+          </div></div></div>
     </header>
     <div class="flex flex-col items-center gap-4">
     <div class="flex items-center gap-6 mt-10">

@@ -10,24 +10,16 @@ const cardValues = { // convert strings to corresponding integer
 };
 
 function getCardValue(card) { // if card value is in cardvalues, turn it into cardvalues integer
-
   if (cardValues[card.value]) {
     return cardValues[card.value]; 
   }
-  return Number(card.value); 
-}
+  return Number(card.value);}
 
-async function getData() {
-  try {
-    const response = await fetch(
-      "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1" // fetch new deck
-    );
+async function getData() { // get deck
+  try {const response = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"); 
     const deckData = await response.json();
     const deckId = deckData.deck_id;
-
-    const drawResponse = await fetch(
-      `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=52` // get whole deck
-    );
+    const drawResponse = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=52`);
     const drawData = await drawResponse.json();
 
     cards = drawData.cards; // save all cards in the deck
@@ -38,7 +30,7 @@ async function getData() {
 }
 
 function showCard() {
-  if (currentIndex >= cards.length) {
+  if (currentIndex >= cards.length) { // win 
     console.log("You win!")
     return;
   }
@@ -58,9 +50,7 @@ document.getElementById("nextCard").addEventListener("click", () => {
   
   if (slapRequired === true){
     console.log("fail")
-  }
-});
-
+  }});
 getData();
 
 function countCard() {
@@ -90,9 +80,6 @@ document.getElementById("slapCard").addEventListener("click", () => {
   }
 });
 
-document.getElementById("rules").addEventListener("click", () => {
-
-});
 
 /*PLAN:
 win: get all 52 cards
@@ -103,5 +90,4 @@ add a "cards left" tracker
 add a "cards taken" tracker
 add a clear way to see that the penatly is applied
 add a timer for slapping (1 second)
-add a rules button in the top right
 */
