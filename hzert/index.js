@@ -80,12 +80,14 @@ function countCard() {
 }
 
 document.getElementById("slapCard").addEventListener("click", () => {
+  
+  if (slapRequired === false){
+    console.log("fail");
+  }
+
   if (slapRequired === true){
     console.log("test");
     slapRequired = false;
   }
 
-  if (slapRequired === false){
-    console.log("fail");
-  }
 });
