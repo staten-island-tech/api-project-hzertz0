@@ -90,9 +90,13 @@ document.getElementById("slapCard").addEventListener("click", () => {
   }
 });
 
+document.getElementById("rules").addEventListener("click", () => {
+
+});
+
 /*PLAN:
 win: get all 52 cards
-penalty: if you slap or try to flip while its a matched card, then the currently drawn cards get thrown back into the shuffle pile
+penalty: if you try to flip while its a matched card, then the currently drawn cards get thrown back into the shuffle pile
 slap: if you slap in time, then you hold onto the cards currently drawn
 features:
 add a "cards left" tracker
