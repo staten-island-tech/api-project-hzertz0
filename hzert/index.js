@@ -1,86 +1,99 @@
-let cards = [];       // holds the deck
-let currentIndex = 0; // tracks current card
-let slapCard = 1;     
+let cards = [];             // holds the deck
+let currentIndex = 0;       // tracks current card
+let slapCard = 1;           
 let slapRequired = false;
-const cardValues = { // convert strings to corresponding integer
+let slapTimer = null;
+const SLAP_TIME = 1000;     
+
+const cardValues = {
   "ACE": 1,
   "JACK": 11,
   "QUEEN": 12,
-  "KING": 13
-};
+  "KING": 13};
 
-function getCardValue(card) { // if card value is in cardvalues, turn it into cardvalues integer
+function getCardValue(card) { 
   if (cardValues[card.value]) {
-    return cardValues[card.value]; 
+    return cardValues[card.value];
   }
-  return Number(card.value);}
+  return Number(card.value);
+}
 
 async function getData() { // get deck
-  try {const response = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"); 
+  try {
+    const response = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
     const deckData = await response.json();
     const deckId = deckData.deck_id;
     const drawResponse = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=52`);
     const drawData = await drawResponse.json();
 
-    cards = drawData.cards; // save all cards in the deck
-    showCard();             // show first card
+    cards = drawData.cards; // save deck
+    showCard();
   } catch (error) {
     console.error(error);
   }
 }
 
 function showCard() {
-  if (currentIndex >= cards.length) { // win 
-    console.log("You win!")
+  if (currentIndex >= cards.length) { // win condition
+    console.log("You win!");
     return;
   }
-  const card = cards[currentIndex];
 
+  const card = cards[currentIndex]; // display card
   document.querySelector(".container").innerHTML = `
-    <img src="${card.image}" class="mx-auto" />
-  `;
+    <img src="${card.image}" class="mx-auto" />`;
   countCard();
-  slapCard++;  
+  slapCard++;
 }
-
-document.getElementById("nextCard").addEventListener("click", () => {
-  if (slapRequired === false){
-    currentIndex++;
-    showCard();}
-  
-  if (slapRequired === true){
-    console.log("fail")
-  }});
-getData();
 
 function countCard() {
   document.querySelector(".slapCount").innerHTML = `
     <p>Current Count: ${slapCard}</p>
-    `
+  `;
+
   if (!cards[currentIndex]) return;
 
   const cardValue = getCardValue(cards[currentIndex]); 
-  
+
   if (slapCard === cardValue || cards[currentIndex].value === "JACK") {
     slapRequired = true;
-    console.log("Slap")}
+
+    // start slap timer
+    slapTimer = setTimeout(() => {
+      if (slapRequired) {
+        console.log("Too slow");
+        slapRequired = false;
+      }
+    }, SLAP_TIME);
+  }
 
   if (slapCard === 13) {
-    slapCard = 0;}
+    slapCard = 0;
+  }
 }
 
-document.getElementById("slapCard").addEventListener("click", () => {
-  
-  if (slapRequired === false){
-    console.log("fail");
-  }
+document.getElementById("nextCard").addEventListener("click", () => {
+  if (slapRequired) {
+    console.log("fail, can't draw");
+    return;}
 
-  if (slapRequired === true){
-    console.log("test");
-    slapRequired = false;
-  }
-
+  currentIndex++;
+  showCard();
 });
+
+document.getElementById("slapCard").addEventListener("click", () => {
+  if (!slapRequired) {
+    console.log("fail, can't slap");
+    return;}
+
+  console.log("success ");
+
+  slapRequired = false;
+  clearTimeout(slapTimer);
+  slapTimer = null;
+});
+
+getData();
 
 
 /*PLAN:
