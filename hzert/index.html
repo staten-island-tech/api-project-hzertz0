@@ -9,9 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
-  <title class="text-black">Slapjack</title>
-</head>
-<body>
+    <title>Slapjack</title>
+  </head>
+  <body class="bg-green-600 font-inter">
     <header class="relative h-30 bg-red-500 font-bold flex items-center px-4">
       <div class="absolute left-1/2 -translate-x-1/2 text-center">
         <h1 class="text-5xl">Slapjack</h1>
@@ -27,18 +27,31 @@
             <p>If you slap in time, then you get to hold onto the current pile drawn, the goal is to hold onto all 52 cards!</p>
           </div></div></div>
     </header>
-    <div class="flex flex-col items-center gap-4">
-    <div class="flex items-center gap-6 mt-10">
-      <img id="cardBack" src="https://deckofcardsapi.com/static/img/back.png"/>
 
-      <div class="container"></div>
+    <div class="flex flex-col items-center gap-4 mt-10">
+      <div class="flex items-start gap-10">
+        <div class="flex items-center gap-6">
+          <img id="cardBack" src="https://deckofcardsapi.com/static/img/back.png"/>
+          <div class="container"></div>
+        </div>
+
+        <div class="card w-80 bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title">Game Status</h2>
+            <div id="statusBox" class="space-y-2 text-sm">
+              <p class="text-gray-500">Game started.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slapCount"></div>
+
+      <div class="mt-8 flex gap-4">
+        <button class="btn btn-active" id="nextCard">Next Card</button>
+        <button class="btn btn-error" id="slapCard">Slap</button>
+      </div>
     </div>
-    <div class="slapCount"></div>
-    <div class="mt-8 flex gap-4">
-      <button class="btn btn-active" id="nextCard">Next Card</button>
-      <button class="btn btn-error" id="slapCard">Slap</button>
-    </div>
-  </div>
 
   <script type="module" src="index.js"></script>
 </body>

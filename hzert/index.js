@@ -1,24 +1,25 @@
 let cards = [];             // holds the deck
 let currentIndex = 0;       // tracks current card
 let slapCard = 1;           
-let slapRequired = false;
-let slapTimer = null;
-const SLAP_TIME = 1000;     
+let slapRequired = false;   
+let slapTimer = null;       
+const SLAP_TIME = 2000;     
+let pile = [];              // cards currently drawn
+let takenCards = [];        // cards the player has won
 
 const cardValues = {
   "ACE": 1,
   "JACK": 11,
   "QUEEN": 12,
-  "KING": 13};
+  "KING": 13
+};
 
+// converts face cards into numbers
 function getCardValue(card) { 
-  if (cardValues[card.value]) {
-    return cardValues[card.value];
-  }
-  return Number(card.value);
+  return cardValues[card.value] ?? Number(card.value);
 }
 
-async function getData() { // get deck
+async function getData() { 
   try {
     const response = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
     const deckData = await response.json();
@@ -26,83 +27,116 @@ async function getData() { // get deck
     const drawResponse = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=52`);
     const drawData = await drawResponse.json();
 
-    cards = drawData.cards; // save deck
+    cards = drawData.cards; 
     showCard();
   } catch (error) {
     console.error(error);
   }
 }
 
-function showCard() {
-  if (currentIndex >= cards.length) { // win condition
-    console.log("You win!");
-    return;
+// display current card
+function showCard() { 
+  if (takenCards.length === 52) {
+    updateStats();
+    addStatusMessage("YOU WIN! All 52 cards collected!", "win");
   }
 
-  const card = cards[currentIndex]; // display card
+  const card = cards[currentIndex]; 
+  pile.push(card); // add to middle pile
+
   document.querySelector(".container").innerHTML = `
-    <img src="${card.image}" class="mx-auto" />`;
+    <img src="${card.image}" class="mx-auto" />
+  `;
   countCard();
   slapCard++;
 }
 
-function countCard() {
+// update the counters
+function updateStats() { 
   document.querySelector(".slapCount").innerHTML = `
     <p>Current Count: ${slapCard}</p>
+    <p>Cards Taken: ${takenCards.length}</p>
+    <p>Cards in Pile: ${pile.length}</p>
   `;
+}
 
+function addStatusMessage(message, type = "info") {
+  const statusBox = document.getElementById("statusBox");
+
+  let colorClass = "text-gray-700";
+  if (type === "penalty") colorClass = "text-red-600";
+  if (type === "success") colorClass = "text-green-600";
+  if (type === "win") colorClass = "text-yellow-600 font-bold text-lg";
+
+  statusBox.innerHTML = `<p class="${colorClass}">${message}</p>`;
+}
+
+// check for slap conditions
+function countCard() {
   if (!cards[currentIndex]) return;
 
-  const cardValue = getCardValue(cards[currentIndex]); 
+  const cardValue = getCardValue(cards[currentIndex]);
 
-  if (slapCard === cardValue || cards[currentIndex].value === "JACK") {
+  if (slapCard === cardValue || cards[currentIndex].value === "JACK"){
     slapRequired = true;
 
-    // start slap timer
-    slapTimer = setTimeout(() => {
-      if (slapRequired) {
-        console.log("Too slow");
-        slapRequired = false;
-      }
+    slapTimer = setTimeout(() => { // too slow
+      addStatusMessage("Too slow! You missed the slap.", "penalty");
+      applyPenalty();
     }, SLAP_TIME);
   }
 
-  if (slapCard === 13) {
-    slapCard = 0;
-  }
+  if (slapCard === 14){
+    slapCard = 1;}
+
+  updateStats();
 }
 
-document.getElementById("nextCard").addEventListener("click", () => {
-  if (slapRequired) {
-    console.log("fail, can't draw");
-    return;}
+// apply penalty (pile back to deck)
+function applyPenalty() {
+  addStatusMessage("Penalty applied! Pile returned to deck.", "penalty");
+  cards = cards.concat(pile);
+  pile = [];
+
+  slapRequired = false;
+  clearTimeout(slapTimer);
+  slapTimer = null;
+
+  updateStats();
+}
+
+// click next card
+document.getElementById("nextCard").addEventListener("click", () => { 
+  if (slapRequired) { // tried to draw during slap
+    addStatusMessage("You tried to draw during a slap!", "penalty");
+    applyPenalty();
+    return;
+  }
 
   currentIndex++;
   showCard();
 });
 
+// click slap
 document.getElementById("slapCard").addEventListener("click", () => {
-  if (!slapRequired) {
-    console.log("fail, can't slap");
-    return;}
+  if (!slapRequired) { // slapped when not required
+    addStatusMessage("Bad slap! No slap was required.", "penalty");
+    applyPenalty();
+    return;
+  }
 
-  console.log("success ");
+  takenCards = takenCards.concat(pile);
+  pile = [];
+
+  addStatusMessage("Successful slap! You won the pile.", "success");
 
   slapRequired = false;
   clearTimeout(slapTimer);
   slapTimer = null;
+
+  if (takenCards.length === 52) {
+    addStatusMessage("YOU WIN! All 52 cards collected!", "win");
+  }
+  updateStats();
 });
-
 getData();
-
-
-/*PLAN:
-win: get all 52 cards
-penalty: if you try to flip while its a matched card, then the currently drawn cards get thrown back into the shuffle pile
-slap: if you slap in time, then you hold onto the cards currently drawn
-features:
-add a "cards left" tracker
-add a "cards taken" tracker
-add a clear way to see that the penatly is applied
-add a timer for slapping (1 second)
-*/
