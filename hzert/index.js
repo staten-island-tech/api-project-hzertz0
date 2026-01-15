@@ -14,9 +14,11 @@ const cardValues = {
   "KING": 13
 };
 
-// converts face cards into numbers
-function getCardValue(card) { 
-  return cardValues[card.value] ?? Number(card.value);
+function getCardValue(card) { // if card value is in cardvalues, turn it into cardvalues integer
+  if (cardValues[card.value]) {
+    return cardValues[card.value]; 
+  }
+  return Number(card.value); 
 }
 
 async function getData() { 
