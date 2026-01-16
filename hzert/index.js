@@ -2,8 +2,7 @@ let cards = [];             // holds the deck
 let currentIndex = 0;       // tracks current card
 let slapCard = 1;           
 let slapRequired = false;   
-let slapTimer = null;       
-const SLAP_TIME = 2000;     
+let slapTimer = null;         
 let pile = [];              // cards currently drawn
 let takenCards = [];        // cards the player has won
 
@@ -75,8 +74,6 @@ function addStatusMessage(message, type = "info") {
 
 // check for slap conditions
 function countCard() {
-  if (!cards[currentIndex]) return;
-
   const cardValue = getCardValue(cards[currentIndex]);
 
   if (slapCard === cardValue || cards[currentIndex].value === "JACK"){
@@ -85,7 +82,7 @@ function countCard() {
     slapTimer = setTimeout(() => { // too slow
       addStatusMessage("Too slow! You missed the slap.", "penalty");
       applyPenalty();
-    }, SLAP_TIME);
+    }, 2000);
   }
 
   if (slapCard === 14){
